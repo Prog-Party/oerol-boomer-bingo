@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017", // Updated from es5 for better performance
     "lib": ["dom", "dom.iterable", "es6"],
     "allowJs": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true, // Skip checking .d.ts files for faster builds
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -12,7 +12,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "incremental": true, // Enable incremental compilation
+    "tsBuildInfoFile": ".next/tsbuildinfo", // Store build info for incremental builds
     "plugins": [
       {
         "name": "next"
