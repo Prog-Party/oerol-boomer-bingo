@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import BingoCell from '@/components/BingoCell'
 import BingoModal from '@/components/BingoModal'
 import { BingoData } from '@/lib/azure'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface BingoBoardPageProps {
   params: { slug: string }
@@ -135,7 +135,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
             <div className="grid grid-cols-5 gap-2 md:gap-3">
               {gridItems.map((item, index) => {
-                const isFree = item === 'FREE'
+                const isFree = item === 'Boomers hebben altijd alles gratis gekregen'
                 const isChecked = isFree || checkedItems.includes(item)
                 
                 return (
