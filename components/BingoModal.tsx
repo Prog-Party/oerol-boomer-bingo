@@ -44,14 +44,14 @@ export default function BingoModal({ isOpen, onClose, createdAt, updatedAt }: Bi
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose} />
         
-        <div className="relative bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center shadow-2xl">
-          {/* Willekeurige party GIF */}
+        <div className="relative bg-white rounded-2xl p-8 max-w-lg w-full mx-4 text-center shadow-2xl">
+          {/* Willekeurige party GIF - 2x groter */}
           {randomGif && (
             <div className="mb-6">
               <img 
                 src={randomGif} 
                 alt="Boomer viert feest!" 
-                className="w-32 h-32 mx-auto rounded-lg object-cover"
+                className="w-64 h-64 mx-auto rounded-lg object-cover"
               />
             </div>
           )}

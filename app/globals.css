@@ -26,7 +26,7 @@
   }
   
   .bingo-cell.checked {
-    @apply bg-green-100 border-green-500;
+    @apply border-red-500;
   }
   
   .bingo-cell.free {
@@ -34,7 +34,8 @@
   }
   
   .bingo-cell.checked::after {
-    content: '✓';
-    @apply absolute inset-0 flex items-center justify-center text-2xl font-bold text-green-600 bg-green-100 bg-opacity-80;
+    content: '✕';
+    @apply absolute inset-0 flex items-center justify-center text-6xl font-bold text-red-600 bg-white bg-opacity-70;
+    font-family: Arial, sans-serif;
   }
 } 

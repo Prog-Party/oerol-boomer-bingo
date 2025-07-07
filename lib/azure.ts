@@ -17,6 +17,7 @@ export interface BingoData {
   checked: string[]
   createdAt: string
   updatedAt: string
+  completedAt?: string
 }
 
 export interface MasterBingoData {
@@ -79,7 +80,7 @@ export async function getBingoData(slug: string): Promise<BingoData | null> {
   }
 }
 
-export async function updateBingoData(slug: string, checked: string[]): Promise<void> {
+export async function updateBingoData(slug: string, checked: string[], completed?: boolean): Promise<void> {
   try {
     const existingData = await getBingoData(slug)
     if (!existingData) {
@@ -88,10 +89,14 @@ export async function updateBingoData(slug: string, checked: string[]): Promise<
     
     const containerClient = getAzureClient()
     const blobClient = containerClient.getBlobClient(`${slug}.json`)
+    const now = new Date().toISOString()
+    
     const updatedData: BingoData = {
       ...existingData,
       checked,
-      updatedAt: new Date().toISOString(),
+      updatedAt: now,
+      // Als bingo net voltooid is, gebruik de huidige tijd als voltooiingstijd
+      ...(completed && checked.length >= 24 && { completedAt: now })
     }
     
     const jsonData = JSON.stringify(updatedData)

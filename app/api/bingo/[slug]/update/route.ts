@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { updateBingoData } from '@/lib/azure'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function PATCH(
   request: NextRequest,
@@ -7,7 +7,7 @@ export async function PATCH(
 ) {
   try {
     const { slug } = params
-    const { checked } = await request.json()
+    const { checked, completed } = await request.json()
     
     if (!slug) {
       return NextResponse.json(
@@ -23,7 +23,7 @@ export async function PATCH(
       )
     }
     
-    await updateBingoData(slug, checked)
+    await updateBingoData(slug, checked, completed)
     
     return NextResponse.json({ success: true })
   } catch (error) {

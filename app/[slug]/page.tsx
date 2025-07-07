@@ -20,6 +20,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   const [error, setError] = useState('')
   const [showBingoModal, setShowBingoModal] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [bingoCompletedAt, setBingoCompletedAt] = useState<string | null>(null)
 
   useEffect(() => {
     fetchBingoData()
@@ -40,6 +41,12 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
       const data: BingoData = await response.json()
       setBingoData(data)
       setCheckedItems(data.checked)
+      
+      // Check if bingo was already completed when loading
+      if (data.checked.length >= 24) {
+        setShowBingoModal(true)
+        setBingoCompletedAt(data.updatedAt)
+      }
     } catch (err) {
       setError('Failed to load bingo game')
       console.error('Error fetching bingo data:', err)
@@ -61,14 +68,28 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     // Hide confetti after animation
     setTimeout(() => setShowConfetti(false), 2000)
     
+    // Check if this completed the bingo
+    const justCompletedBingo = newCheckedItems.length >= 24 && checkedItems.length < 24
+    
     try {
       await fetch(`/api/bingo/${slug}/update`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ checked: newCheckedItems }),
+        body: JSON.stringify({ 
+          checked: newCheckedItems,
+          // Als bingo net voltooid is, stuur completion flag mee
+          ...(justCompletedBingo && { completed: true })
+        }),
       })
+      
+      // Als bingo net voltooid is, toon modal
+      if (justCompletedBingo) {
+        const completionTime = new Date().toISOString()
+        setBingoCompletedAt(completionTime)
+        setShowBingoModal(true)
+      }
     } catch (error) {
       console.error('Error updating bingo data:', error)
       // Revert on error
@@ -82,11 +103,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     return checkedItems.length >= 24
   }
 
-  useEffect(() => {
-    if (checkBingoCompletion() && bingoData) {
-      setShowBingoModal(true)
-    }
-  }, [checkedItems, bingoData])
+  // Verwijder de automatische useEffect - modal wordt nu direct getoond bij completion
 
   if (isLoading) {
     return (
@@ -172,9 +189,12 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
       {showBingoModal && bingoData && (
         <BingoModal
           isOpen={showBingoModal}
-          onClose={() => setShowBingoModal(false)}
+          onClose={() => {
+            setShowBingoModal(false)
+            setBingoCompletedAt(null)
+          }}
           createdAt={bingoData.createdAt}
-          updatedAt={bingoData.updatedAt}
+          updatedAt={bingoCompletedAt || bingoData.updatedAt}
         />
       )}
       
