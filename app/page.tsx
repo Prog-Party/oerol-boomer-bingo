@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import DonateDropdown from '@/components/DonateDropdown'
 import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 
 export default function HomePage() {
   const [name, setName] = useState('')
@@ -53,14 +54,14 @@ export default function HomePage() {
                 Oerol Boomer Bingo
               </h1>
               <p className="text-gray-600">
-                Create your own bingo game and start playing!
+                Start je bingo door je naam in te vullen!
               </p>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Name
+                  Je naam
                 </label>
                 <input
                   type="text"
@@ -68,7 +69,7 @@ export default function HomePage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                  placeholder="Enter your name"
+                  placeholder="Voer je naam in"
                   disabled={isLoading}
                   required
                 />
@@ -88,24 +89,14 @@ export default function HomePage() {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Creating Bingo...
+                    Bingo wordt aangemaakt...
                   </div>
-                ) : (
-                  'Create a new Bingo'
-                )}
+                ) : <>Start de Bingo</>}
               </button>
             </form>
             
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <button
-                onClick={() => {
-                  // Placeholder for donate functionality
-                  alert('Donate functionality coming soon!')
-                }}
-                className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-              >
-                Donate
-              </button>
+              <DonateDropdown />
             </div>
           </div>
         </div>

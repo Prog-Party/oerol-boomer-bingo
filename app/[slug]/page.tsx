@@ -128,7 +128,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
               Oerol Boomer Bingo
             </h1>
             <p className="text-gray-600">
-              Progress: {checkedItems.length}/24
+              Voortgang: {checkedItems.length}/24
             </p>
           </header>
           
@@ -157,7 +157,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
               onClick={() => router.push('/')}
               className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
-              Create New Game
+              Start een nieuwe Bingo
             </button>
           </div>
         </div>

@@ -19,7 +19,7 @@ const nextConfig = {
   },
   
   // Output optimizations
-  output: 'standalone', // Generate smaller bundles
+  //output: 'standalone', // Generate smaller bundles
   
   // Development optimizations
   ...(process.env.NODE_ENV === 'development' && {
