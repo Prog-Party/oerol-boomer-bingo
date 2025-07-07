@@ -16,7 +16,13 @@
 
 @layer components {
   .bingo-cell {
-    @apply relative flex items-center justify-center p-2 text-center text-sm font-medium border-2 border-gray-300 bg-white cursor-pointer transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply relative flex items-center justify-center text-center border-2 border-gray-300 bg-white cursor-pointer transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    /* Compacte padding en betere tekstweergave */
+    padding: 0.5rem;
+    font-size: clamp(0.65rem, 2vw, 0.85rem);
+    line-height: 1.2;
+    word-break: break-word;
+    hyphens: auto;
   }
   
   .bingo-cell.checked {

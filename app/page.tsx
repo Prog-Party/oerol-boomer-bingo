@@ -45,8 +45,19 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
-      <main className="flex-1 flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex flex-col relative"
+      style={{
+        backgroundImage: "url('/images/Phone bingo red pencil.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay voor betere leesbaarheid */}
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      
+      <main className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-8">

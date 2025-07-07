@@ -1,4 +1,3 @@
-import React from 'react'
 
 interface BingoCellProps {
   item: string
@@ -13,9 +12,6 @@ export default function BingoCell({ item, isChecked, isFree, onClick, index }: B
     'bingo-cell',
     'min-h-[80px]',
     'md:min-h-[100px]',
-    'text-xs',
-    'md:text-sm',
-    'lg:text-base',
     'rounded-lg',
     'select-none',
     'touch-manipulation'
@@ -29,26 +25,27 @@ export default function BingoCell({ item, isChecked, isFree, onClick, index }: B
 
   return (
     <button
-      style={{
-        fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
-        lineHeight: '1.3',
-        textAlign: 'center',
-        padding: '1rem',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
       className={cellClasses.join(' ')}
       onClick={onClick}
       disabled={isFree}
-      aria-label={isFree ? 'Free space (already checked)' : `${item} - ${isChecked ? 'checked' : 'unchecked'}`}
+      aria-label={isFree ? 'Gratis vakje (al aangevinkt)' : `${item} - ${isChecked ? 'aangevinkt' : 'niet aangevinkt'}`}
       aria-pressed={isChecked}
       tabIndex={isFree ? -1 : 0}
       role="button"
       data-testid={`bingo-cell-${index}`}
+      style={{
+        padding: '0.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontSize: 'clamp(0.65rem, 2vw, 0.85rem)',
+        lineHeight: '1.2',
+        fontWeight: '500'
+      }}
     >
-      <span className="px-1 break-words">
-        {isFree ? 'Boomers hebben altijd alles gratis gekregen' : item}
+      <span className="break-words hyphens-auto leading-tight">
+        {isFree ? 'GRATIS' : item}
       </span>
     </button>
   )

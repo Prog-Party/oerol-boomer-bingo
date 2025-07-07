@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface DonateOption {
   amount: number
@@ -14,25 +14,25 @@ const donateOptions: DonateOption[] = [
     amount: 1,
     guldenAmount: 2.20,
     description: "De waarde van een kop koffie in 1995 ☕",
-    payNlLink: "" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=100&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
     amount: 3.50,
     guldenAmount: 7.71,
     description: "Ik weet niet wat het kost, maar m'n kind regelt m'n internetbankieren 💻",
-    payNlLink: "" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=350&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
     amount: 8,
     guldenAmount: 17.62,
     description: "Ik ben een gulle boomer 🧓",
-    payNlLink: "" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=800&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
-    amount: 50000,
-    guldenAmount: 110197.5,
+    amount: 9999.99,
+    guldenAmount: 22037.08,
     description: "Ik gun je de overwaarde van mijn tweede huis 🏠",
-    payNlLink: "" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=999999&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   }
 ]
 
@@ -40,27 +40,12 @@ export default function DonateDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Sluit dropdown wanneer er buiten geklikt wordt
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
   const handleDonateClick = (option: DonateOption) => {
     if (option.payNlLink) {
       window.open(option.payNlLink, '_blank')
     } else {
       alert(`Pay.nl link voor €${option.amount} nog niet ingesteld`)
     }
-    setIsOpen(false)
   }
 
   const formatAmount = (amount: number) => {

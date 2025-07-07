@@ -93,7 +93,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading bingo game...</p>
+          <p className="text-gray-600">Bingo wordt ingeladen...</p>
         </div>
       </div>
     )
@@ -117,7 +117,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
   // Create 5x5 grid with FREE in center
   const gridItems = [...bingoData.items]
-  gridItems.splice(12, 0, 'Boomers hebben altijd alles gratis gekregen') // Insert FREE at position 12 (center of 5x5 grid)
+  gridItems.splice(12, 0, 'GRATIS') // Insert FREE at position 12 (center of 5x5 grid)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -135,7 +135,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
             <div className="grid grid-cols-5 gap-2 md:gap-3">
               {gridItems.map((item, index) => {
-                const isFree = item === 'Boomers hebben altijd alles gratis gekregen'
+                const isFree = item === 'GRATIS'
                 const isChecked = isFree || checkedItems.includes(item)
                 
                 return (
@@ -150,6 +150,12 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
                 )
               })}
             </div>
+          </div>
+
+          <div className='mt-6 text-center'>
+            <p className="text-gray-600 text-sm">
+              <b>GRATIS</b>: Het middelste vakje is gratis. Boomers hebben altijd alles gratis gekregen.
+            </p>
           </div>
           
           <div className="mt-6 text-center">
