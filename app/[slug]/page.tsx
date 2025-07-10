@@ -203,6 +203,9 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
         </div>
       )}
+
+      <footer className="text-center text-white text-sm mt-8" style={{ backgroundColor: '#945f14', clipPath: 'polygon(0 20%,100% 0,100% 100%,0% 100%)', marginTop: 'auto', padding: '1rem 0' }}>
+      </footer>
     </div>
   )
 } 
