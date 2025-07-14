@@ -13,7 +13,7 @@ interface BingoBoardPageProps {
 export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   const { slug } = params
   const router = useRouter()
-  
+
   const [bingoData, setBingoData] = useState<BingoData | null>(null)
   const [checkedItems, setCheckedItems] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -29,7 +29,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   const fetchBingoData = async () => {
     try {
       const response = await fetch(`/api/bingo/${slug}`)
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           router.push('/')
@@ -37,11 +37,11 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
         }
         throw new Error('Failed to fetch bingo data')
       }
-      
+
       const data: BingoData = await response.json()
       setBingoData(data)
       setCheckedItems(data.checked)
-      
+
       // Check if bingo was already completed when loading
       if (data.checked.length >= 24) {
         setShowBingoModal(true)
@@ -57,33 +57,33 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
   const handleCellClick = async (item: string) => {
     if (!bingoData) return
-    
+
     const newCheckedItems = checkedItems.includes(item)
       ? checkedItems.filter(id => id !== item)
       : [...checkedItems, item]
-    
+
     setCheckedItems(newCheckedItems)
     setShowConfetti(true)
-    
+
     // Hide confetti after animation
     setTimeout(() => setShowConfetti(false), 2000)
-    
+
     // Check if this completed the bingo
     const justCompletedBingo = newCheckedItems.length >= 24 && checkedItems.length < 24
-    
+
     try {
       await fetch(`/api/bingo/${slug}/update`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           checked: newCheckedItems,
           // Als bingo net voltooid is, stuur completion flag mee
           ...(justCompletedBingo && { completed: true })
         }),
       })
-      
+
       // Als bingo net voltooid is, toon modal
       if (justCompletedBingo) {
         const completionTime = new Date().toISOString()
@@ -142,19 +142,19 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
         <div className="max-w-2xl mx-auto">
           <header className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Oerol Boomer Bingo
+              Oerol Boomerbingo
             </h1>
             <p className="text-gray-600">
               Voortgang: {checkedItems.length}/24
             </p>
           </header>
-          
+
           <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
             <div className="grid grid-cols-5 gap-2 md:gap-3">
               {gridItems.map((item, index) => {
                 const isFree = item === 'GRATIS'
                 const isChecked = isFree || checkedItems.includes(item)
-                
+
                 return (
                   <BingoCell
                     key={index}
@@ -174,7 +174,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
               <b>GRATIS</b>: Het middelste vakje is gratis. Boomers hebben altijd alles gratis gekregen.
             </p>
           </div>
-          
+
           <div className="mt-6 text-center">
             <button
               onClick={() => router.push('/')}
@@ -185,7 +185,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           </div>
         </div>
       </div>
-      
+
       {showBingoModal && bingoData && (
         <BingoModal
           isOpen={showBingoModal}
@@ -197,7 +197,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           updatedAt={bingoCompletedAt || bingoData.updatedAt}
         />
       )}
-      
+
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-40">
           <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>

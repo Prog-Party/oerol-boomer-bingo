@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Oerol Boomer Bingo',
+  title: 'Oerol Boomerbingo',
   description: 'A mobile-first bingo game for Oerol festival',
 }
 
