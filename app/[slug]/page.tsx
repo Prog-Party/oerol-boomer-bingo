@@ -161,7 +161,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     return (
       <div 
         className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center" 
-        style={{ height: '80vh' }}>
+        style={{ height: '95vh' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Bingo wordt ingeladen...</p>
@@ -173,7 +173,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     return (
       <div 
         className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center" 
-        style={{ height: '80vh' }}>
+        style={{ height: '95vh' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Bingo wordt aangemaakt...</p>

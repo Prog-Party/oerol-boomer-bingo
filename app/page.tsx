@@ -33,7 +33,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="flex flex-col relative items-center justify-center py-8 pt-4"
+      className="flex flex-col relative items-center justify-center"
       style={{
         backgroundImage: "url('/images/Phone bingo red pencil.png')",
         backgroundSize: 'cover',
@@ -43,8 +43,7 @@ export default function HomePage() {
         minHeight: '100vh'
       }}
     >
-      {/* <main className="flex-1 flex items-center justify-center p-4 relative"> */}
-      <div className="max-w-md w-full  mt-8">
+      <div className="max-w-md w-full  mt-8 mb-8">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <p className="text-gray-600">
