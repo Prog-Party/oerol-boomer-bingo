@@ -173,7 +173,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
           <div className='mt-6 text-center'>
             <p className="text-gray-600 text-sm">
-              <b>GRATIS</b>: Het middelste vakje is gratis. Boomers hebben altijd alles gratis gekregen.
+              Het middelste vakje krijg je <b>gratis</b> (net zoals boomers altijd alles gratis hebben gekregen).
             </p>
           </div>
 

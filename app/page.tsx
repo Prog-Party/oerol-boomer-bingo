@@ -59,25 +59,25 @@ export default function HomePage() {
       <div className="max-w-md w-full  mt-8">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Oerol Boomerbingo
-            </h1>
             <p className="text-gray-600">
-              Turf je frustratie van je af met de ✨ Oerol Boomerbingo! ✨
+              Turf je frustratie van je af met de
             </p>
+            
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              ✨ Oerol Boomerbingo ✨
+            </h1>
             <p className="text-gray-600 mt-2">
               Volle kaart? Dan win je een ANWB-abonnement en een paar premium Nordicwalking-sokken.
-              Het middelste vakje krijg je gratis (net zoals boomers altijd alles gratis hebben gekregen).
             </p>
             <p className="text-gray-600 mt-2">
-                Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? {'->'} @
+                Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? -&gt; 
               <a
                 href="https://www.instagram.com/andriestunru"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary-600 hover:underline"
               >
-                AndriesTunru
+                &nbsp;@AndriesTunru&nbsp;
               </a> op Instagram
             </p>
             <p className='text-gray-600 mt-2 text-sm'>
@@ -121,13 +121,8 @@ export default function HomePage() {
               ) : <>Start de Bingo</>}
             </button>
           </form>
-
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <DonateDropdown />
-          </div>
         </div>
       </div>
-      {/* </main > */}
     </div >
   )
 } 
