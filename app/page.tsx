@@ -1,6 +1,5 @@
 'use client'
 
-import DonateDropdown from '@/components/DonateDropdown'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -105,10 +104,6 @@ export default function HomePage() {
                 ) : <>Start de Bingo</>}
               </button>
             </form>
-
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <DonateDropdown />
-            </div>
           </div>
         </div>
       </main>
