@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react'
 
 interface DonateOption {
-  amount: number
+  euroAmount: number
   guldenAmount: number
   description: string
   payNlLink?: string
@@ -11,40 +11,45 @@ interface DonateOption {
 
 const donateOptions: DonateOption[] = [
   {
-    amount: 1,
-    guldenAmount: 2.20,
+    euroAmount: ConvertGuilderToEuro(2.50),
+    guldenAmount: 2.50,
     description: "De waarde van een kop koffie in 1995 ☕",
-    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=100&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
-    amount: 3.50,
-    guldenAmount: 7.71,
+    euroAmount: ConvertGuilderToEuro(8.0),
+    guldenAmount: 8.0,
     description: "Ik weet niet wat het kost, maar m'n kind regelt m'n internetbankieren 💻",
-    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=350&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
-    amount: 8,
-    guldenAmount: 17.62,
+    euroAmount: ConvertGuilderToEuro(20.0),
+    guldenAmount: 20.0,
     description: "Ik ben een gulle boomer 🧓",
-    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=800&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   },
   {
-    amount: 9999.99,
-    guldenAmount: 22037.08,
+    euroAmount: ConvertGuilderToEuro(22000.0),
+    guldenAmount: 22000.0,
     description: "Ik gun je de overwaarde van mijn tweede huis 🏠",
-    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount=999999&amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
+    payNlLink: "https://connect.pay.nl/doneren/SL-8058-1783/0Lc5a11?amount_min=100&extra1%5BGeef+een+compliment%5D=Wat+een+leuke+bingo%21" // Te vullen door gebruiker
   }
 ]
+
+function ConvertGuilderToEuro(gulden: number): number {
+  return gulden / 2.20371
+}
 
 export default function DonateDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const handleDonateClick = (option: DonateOption) => {
-    if (option.payNlLink) {
-      window.open(option.payNlLink, '_blank')
+    if (option.payNlLink && option.euroAmount > 0) {
+      const donateAmount: number = option.euroAmount * 100
+      window.open(`${option.payNlLink}&amount=${donateAmount.toFixed(0)}`, '_blank')
     } else {
-      alert(`Pay.nl link voor €${option.amount} nog niet ingesteld`)
+      alert(`Pay.nl link voor €${option.euroAmount} nog niet ingesteld`)
     }
   }
 
@@ -83,10 +88,9 @@ export default function DonateDropdown() {
       </button>
 
       {/* Accordion content - klapt naar beneden uit */}
-      <div 
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
       >
         <div className="mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
           <div className="py-2">
@@ -99,9 +103,9 @@ export default function DonateDropdown() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="font-semibold text-green-600 mb-1">
-                      {formatAmount(option.amount)}
+                      ƒ {formatGuldenAmount(option.guldenAmount)}*
                       <span className="text-xs text-gray-500 ml-2">
-                        (ƒ {formatGuldenAmount(option.guldenAmount)}*)
+                        ( {formatAmount(option.euroAmount)} )
                       </span>
                     </div>
                     <div className="text-sm text-gray-700 leading-tight">
@@ -112,7 +116,7 @@ export default function DonateDropdown() {
               </button>
             ))}
           </div>
-          
+
           {/* Voetnoot */}
           <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
             <p className="text-xs text-gray-600 leading-tight">
