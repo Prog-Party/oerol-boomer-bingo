@@ -46,17 +46,14 @@ export default function HomePage() {
 
   return (
     <div
-      className="flex flex-col relative min-h-screen items-center justify-center"
+      className="flex flex-col relative items-center justify-center py-8 pt-4"
       style={{
         backgroundImage: "url('/images/Phone bingo red pencil.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0
+        backgroundAttachment: 'fixed',
+        minHeight: '100vh'
       }}
     >
       {/* <main className="flex-1 flex items-center justify-center p-4 relative"> */}
@@ -74,7 +71,7 @@ export default function HomePage() {
               Het middelste vakje krijg je gratis (net zoals boomers altijd alles gratis hebben gekregen).
             </p>
             <p className="text-gray-600 mt-2">
-                Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? -> @
+                Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? {'->'} @
               <a
                 href="https://www.instagram.com/andriestunru"
                 target="_blank"

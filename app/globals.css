@@ -7,10 +7,12 @@
 @layer base {
   html {
     font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", cursive;
+    overflow-x: hidden;
   }
   
   body {
     font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", cursive;
+    overflow-x: hidden;
   }
 }
 
