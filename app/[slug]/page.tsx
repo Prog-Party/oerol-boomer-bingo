@@ -107,7 +107,9 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div 
+        className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center" 
+        style={{ height: '80vh' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Bingo wordt ingeladen...</p>
@@ -118,7 +120,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
   if (error || !bingoData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Bingo game not found'}</p>
           <button
@@ -137,9 +139,9 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   gridItems.splice(12, 0, 'GRATIS') // Insert FREE at position 12 (center of 5x5 grid)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-6">
-        <div className="max-w-2xl mx-auto">
+    <div className="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden">
+      <div className="flex-grow container mx-auto px-4 py-6 max-w-full">
+        <div className="max-w-2xl mx-auto w-full">
           <header className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Oerol Boomerbingo
@@ -149,8 +151,8 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
             </p>
           </header>
 
-          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
-            <div className="grid grid-cols-5 gap-2 md:gap-3">
+          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6 overflow-hidden">
+            <div className="grid grid-cols-5 gap-2 md:gap-3 w-full max-w-full">
               {gridItems.map((item, index) => {
                 const isFree = item === 'GRATIS'
                 const isChecked = isFree || checkedItems.includes(item)
@@ -171,7 +173,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
           <div className='mt-6 text-center'>
             <p className="text-gray-600 text-sm">
-              <b>GRATIS</b>: Het middelste vakje is gratis. Boomers hebben altijd alles gratis gekregen.
+              Het middelste vakje krijg je <b>gratis</b> (net zoals boomers altijd alles gratis hebben gekregen).
             </p>
           </div>
 
@@ -203,9 +205,6 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
         </div>
       )}
-
-      <footer className="text-center text-white text-sm mt-8" style={{ backgroundColor: '#945f14', clipPath: 'polygon(0 20%,100% 0,100% 100%,0% 100%)', marginTop: 'auto', padding: '1rem 0' }}>
-      </footer>
     </div>
   )
 } 
