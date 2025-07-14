@@ -137,8 +137,8 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   gridItems.splice(12, 0, 'GRATIS') // Insert FREE at position 12 (center of 5x5 grid)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="flex-grow container mx-auto px-4 py-6">
         <div className="max-w-2xl mx-auto">
           <header className="text-center mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -203,9 +203,6 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
         </div>
       )}
-
-      <footer className="text-center text-white text-sm mt-8" style={{ backgroundColor: '#945f14', clipPath: 'polygon(0 20%,100% 0,100% 100%,0% 100%)', marginTop: 'auto', padding: '1rem 0' }}>
-      </footer>
     </div>
   )
 } 
