@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { fetchMasterBingoData, saveBingoData } from '@/lib/azure'
-import { generateSlug, selectRandomItems } from '@/lib/utils'
+import { generateUniqueSlug, selectRandomItems } from '@/lib/utils'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,14 +13,16 @@ export async function POST(request: NextRequest) {
       )
     }
     
+    const trimmedName = name.trim()
+    
     // Fetch master bingo data from Azure
     const masterData = await fetchMasterBingoData()
     
     // Select 24 random items and shuffle them
     const selectedItems = selectRandomItems(masterData.items, 24)
     
-    // Generate slug
-    const slug = generateSlug(name.trim())
+    // Generate unique slug
+    const slug = await generateUniqueSlug(trimmedName)
     
     // Save bingo data to Azure
     await saveBingoData(slug, {

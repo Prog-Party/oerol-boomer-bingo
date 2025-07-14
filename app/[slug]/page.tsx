@@ -3,8 +3,9 @@
 import BingoCell from '@/components/BingoCell'
 import BingoModal from '@/components/BingoModal'
 import { BingoData } from '@/lib/azure'
+import { createBingoGame, extractNameFromSlug } from '@/lib/bingoUtils'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface BingoBoardPageProps {
   params: { slug: string }
@@ -17,22 +18,81 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   const [bingoData, setBingoData] = useState<BingoData | null>(null)
   const [checkedItems, setCheckedItems] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isCreatingNew, setIsCreatingNew] = useState(false)
   const [error, setError] = useState('')
   const [showBingoModal, setShowBingoModal] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [bingoCompletedAt, setBingoCompletedAt] = useState<string | null>(null)
+  const lastFetchedSlug = useRef<string | null>(null)
 
   useEffect(() => {
+    // Only fetch if we haven't already fetched for this slug
+    if (!slug || slug === lastFetchedSlug.current) {
+      return
+    }
+
+    lastFetchedSlug.current = slug
     fetchBingoData()
   }, [slug])
 
+  const handleStartNewBingo = async () => {
+
+    setIsCreatingNew(true)
+    try {
+      const name = extractNameFromSlug(slug)
+      const newSlug = await createBingoGame(name.trim())
+      router.push(`/${newSlug}`)
+    } catch (error) {
+      console.error('Error creating new bingo:', error)
+      setError('Failed to create new bingo game')
+    } finally {
+      setIsCreatingNew(false)
+    }
+  }
+
+  const createNewBingoGameForSlug = async () => {
+
+    // Automatically create a bingo game for this unused URL
+          try {
+            setIsCreatingNew(true)
+            const name = extractNameFromSlug(slug)
+            const newSlug = await createBingoGame(name)
+
+            console.log("slug", slug, "Current name", name, "new slug", newSlug)
+            
+            // If the new slug is different, redirect to it
+            if (newSlug !== slug) {
+              router.replace(`/${newSlug}`)
+              return
+            }
+            
+            // Otherwise, try fetching again
+            const newResponse = await fetch(`/api/bingo/${slug}`)
+            if (newResponse.ok) {
+              const data: BingoData = await newResponse.json()
+              setBingoData(data)
+              setCheckedItems(data.checked)
+              return
+            }
+          } catch (createError) {
+            console.error('Error auto-creating bingo game:', createError)
+            // Fall back to redirecting to homepage
+            router.push('/')
+            return
+          } finally {
+      setIsCreatingNew(false)
+    }
+  }
+
   const fetchBingoData = async () => {
+    if (!slug) return
+    
     try {
       const response = await fetch(`/api/bingo/${slug}`)
 
       if (!response.ok) {
         if (response.status === 404) {
-          router.push('/')
+          createNewBingoGameForSlug()
           return
         }
         throw new Error('Failed to fetch bingo data')
@@ -97,14 +157,6 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     }
   }
 
-  const checkBingoCompletion = () => {
-    if (!bingoData) return false
-    // Check if all 24 non-FREE cells are checked
-    return checkedItems.length >= 24
-  }
-
-  // Verwijder de automatische useEffect - modal wordt nu direct getoond bij completion
-
   if (isLoading) {
     return (
       <div 
@@ -113,6 +165,18 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Bingo wordt ingeladen...</p>
+        </div>
+      </div>
+    )
+  }
+  if (isCreatingNew) {
+    return (
+      <div 
+        className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center" 
+        style={{ height: '80vh' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Bingo wordt aangemaakt...</p>
         </div>
       </div>
     )
@@ -179,10 +243,18 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => router.push('/')}
-              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              onClick={handleStartNewBingo}
+              disabled={isCreatingNew}
+              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Start een nieuwe Bingo
+              {isCreatingNew ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Bingo wordt aangemaakt...
+                </div>
+              ) : (
+                <>Start een nieuwe Bingo</>
+              )}
             </button>
           </div>
         </div>

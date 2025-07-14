@@ -1,5 +1,6 @@
 'use client'
 
+import { createBingoGame } from '@/lib/bingoUtils'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -21,20 +22,7 @@ export default function HomePage() {
     setError('')
 
     try {
-      const response = await fetch('/api/bingo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: name.trim() }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create bingo game')
-      }
-
-      const { slug } = await response.json()
+      const slug = await createBingoGame(name.trim())
       router.push(`/${slug}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
