@@ -2,6 +2,7 @@
 
 import BingoCell from '@/components/BingoCell'
 import BingoModal from '@/components/BingoModal'
+import BingoOverview from '@/components/BingoOverview'
 import { BingoData } from '@/lib/azure'
 import { createBingoGame, extractNameFromSlug } from '@/lib/bingoUtils'
 import { useRouter } from 'next/navigation'
@@ -203,10 +204,10 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   gridItems.splice(12, 0, 'GRATIS') // Insert FREE at position 12 (center of 5x5 grid)
 
   return (
-    <div className="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden">
+    <div className="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden min-h-screen">
       <div className="flex-grow container mx-auto px-4 py-6 max-w-full">
         <div className="max-w-2xl mx-auto w-full">
-          <header className="text-center mb-8">
+          <header className="text-center mb-6 md:w-full md:min-h-0 min-h-[200px]" style={{ width: 'calc(100% - 200px)' }}>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Oerol Boomerbingo
             </h1>
@@ -215,24 +216,70 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
             </p>
           </header>
 
-          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6 overflow-hidden">
-            <div className="grid grid-cols-5 gap-2 md:gap-3 w-full max-w-full">
-              {gridItems.map((item, index) => {
-                const isFree = item === 'GRATIS'
-                const isChecked = isFree || checkedItems.includes(item)
-
-                return (
-                  <BingoCell
-                    key={index}
-                    item={item}
-                    isChecked={isChecked}
-                    isFree={isFree}
-                    onClick={() => !isFree && handleCellClick(item)}
-                    index={index}
-                  />
-                )
-              })}
+          {/* Mobile Overview Card - only show on mobile, make it sticky */}
+            <div className="md:hidden fixed top-0 bottom-0 right-0 z-20 pt-2 pb-4 px-4"
+            style={{ height: '240px', width: '200px' }}>
+            <BingoOverview gridItems={gridItems} checkedItems={checkedItems} />
             </div>
+
+          {/* Desktop Grid - hidden on mobile */}
+          <div className="hidden md:block">
+            <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6 overflow-hidden">
+              <div className="grid grid-cols-5 gap-2 md:gap-3 w-full max-w-full">
+                {gridItems.map((item, index) => {
+                  const isFree = item === 'GRATIS'
+                  const isChecked = isFree || checkedItems.includes(item)
+
+                  return (
+                    <BingoCell
+                      key={index}
+                      item={item}
+                      isChecked={isChecked}
+                      isFree={isFree}
+                      onClick={() => !isFree && handleCellClick(item)}
+                      index={index}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile List View - only show on mobile */}
+          <div className="md:hidden grid grid-cols-1 gap-2">
+            {gridItems.map((item, index) => {
+              const isFree = item === 'GRATIS'
+              const isChecked = isFree || checkedItems.includes(item)
+
+              if (isFree) return null // Skip the GRATIS item in mobile list
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => !isFree && handleCellClick(item)}
+                  disabled={isFree}
+                  className={`
+                    p-3 rounded-lg text-left transition-all duration-200 border-2 h-15 relative
+                    ${isChecked 
+                      ? 'bg-green-50 border-green-300 text-green-800' 
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                  `}
+                >
+                  <div className="flex items-center h-full pr-8">
+                    <span className="font-medium text-xs leading-tight line-clamp-3 flex-1">{item}</span>
+                  </div>
+                  {isChecked && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">✓</span>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              )
+            })}
           </div>
 
           <div className='mt-6 text-center'>

@@ -17,7 +17,8 @@ export default function BingoModal({ isOpen, onClose, createdAt, updatedAt }: Bi
   // Selecteer een willekeurige GIF
   useEffect(() => {
     if (isOpen) {
-      const randomNum = Math.floor(Math.random() * 3) + 1 // 1, 2, of 3
+      const amountGifs = 4 // maximaal aantal GIFs
+      const randomNum = Math.floor(Math.random() * amountGifs) + 1
       const gifPath = `/videos/party/Boomer viert feest (${randomNum}).gif`
       setRandomGif(gifPath)
 
