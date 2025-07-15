@@ -41,6 +41,7 @@ export async function fetchMasterBingoData(): Promise<MasterBingoData> {
 
 export async function saveBingoData(slug: string, data: Omit<BingoData, 'createdAt' | 'updatedAt'>): Promise<void> {
   try {
+    slug = slug.toLowerCase()
     const containerClient = getAzureClient()
     const blobClient = containerClient.getBlobClient(`${slug}.json`)
     const now = new Date().toISOString()
@@ -63,6 +64,7 @@ export async function saveBingoData(slug: string, data: Omit<BingoData, 'created
 
 export async function getBingoData(slug: string): Promise<BingoData | null> {
   try {
+    slug = slug.toLowerCase()
     const containerClient = getAzureClient()
     const blobClient = containerClient.getBlobClient(`${slug}.json`)
     const exists = await blobClient.exists()
@@ -82,6 +84,7 @@ export async function getBingoData(slug: string): Promise<BingoData | null> {
 
 export async function updateBingoData(slug: string, checked: string[], completed?: boolean): Promise<void> {
   try {
+    slug = slug.toLowerCase()
     const existingData = await getBingoData(slug)
     if (!existingData) {
       throw new Error('Bingo data not found')
@@ -107,6 +110,54 @@ export async function updateBingoData(slug: string, checked: string[], completed
   } catch (error) {
     console.error('Error updating bingo data:', error)
     throw new Error('Failed to update bingo data')
+  }
+}
+
+export async function slugExists(slug: string): Promise<boolean> {
+  try {
+    slug = slug.toLowerCase()
+    const containerClient = getAzureClient()
+    const blobClient = containerClient.getBlobClient(`${slug}.json`)
+    return await blobClient.exists()
+  } catch (error) {
+    console.error('Error checking if slug exists:', error)
+    return false
+  }
+}
+
+export async function getAllExistingSlugs(): Promise<string[]> {
+  try {
+    const containerClient = getAzureClient()
+    const blobs = containerClient.listBlobsFlat()
+    const slugs: string[] = []
+    
+    for await (const blob of blobs) {
+      if (blob.name.endsWith('.json') && blob.name !== 'master-bingo-data.json') {
+        // Remove .json extension to get the slug
+        const slug = blob.name.replace('.json', '')
+        slugs.push(slug)
+      }
+    }
+    
+    return slugs
+  } catch (error) {
+    console.error('Error getting existing slugs:', error)
+    return []
+  }
+}
+
+export async function findExistingBingoByName(name: string): Promise<{ slug: string; data: BingoData } | null> {
+  try {
+    name = name.toLowerCase()
+    const data = await getBingoData(name)
+    if (data) {
+      return { slug: name, data }
+    }
+
+    return null
+  } catch (error) {
+    console.error('Error finding existing bingo by name:', error)
+    return null
   }
 }
 

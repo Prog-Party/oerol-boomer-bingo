@@ -1,9 +1,30 @@
 import slugify from 'slugify'
+import { slugExists } from './azure'
 
 export function generateSlug(name: string): string {
   const baseSlug = slugify(name, { lower: true, strict: true })
   const randomChars = Math.random().toString(36).substring(2, 8)
   return `${baseSlug}-${randomChars}`
+}
+
+export async function generateUniqueSlug(name: string, maxAttempts: number = 30): Promise<string> {
+  
+  const nameExists = await slugExists(name)
+  if (!nameExists) {
+    return name
+  }
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const slug = generateSlug(name)
+    const exists = await slugExists(slug)
+    
+    if (!exists) {
+      return slug
+    }
+  }
+  
+  // If we couldn't generate a unique slug after maxAttempts, throw an error
+  throw new Error('Could not generate a unique slug after multiple attempts')
 }
 
 export function shuffleArray<T>(array: T[]): T[] {

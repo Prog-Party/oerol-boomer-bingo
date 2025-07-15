@@ -2,10 +2,12 @@
 
 import BingoCell from '@/components/BingoCell'
 import BingoModal from '@/components/BingoModal'
+import BingoOverview from '@/components/BingoOverview'
 import SocialShare from '@/components/SocialShare'
 import { BingoData } from '@/lib/azure'
+import { createBingoGame, extractNameFromSlug } from '@/lib/bingoUtils'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface BingoBoardPageProps {
   params: { slug: string }
@@ -18,22 +20,81 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   const [bingoData, setBingoData] = useState<BingoData | null>(null)
   const [checkedItems, setCheckedItems] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isCreatingNew, setIsCreatingNew] = useState(false)
   const [error, setError] = useState('')
   const [showBingoModal, setShowBingoModal] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [bingoCompletedAt, setBingoCompletedAt] = useState<string | null>(null)
+  const lastFetchedSlug = useRef<string | null>(null)
 
   useEffect(() => {
+    // Only fetch if we haven't already fetched for this slug
+    if (!slug || slug === lastFetchedSlug.current) {
+      return
+    }
+
+    lastFetchedSlug.current = slug
     fetchBingoData()
   }, [slug])
 
+  const handleStartNewBingo = async () => {
+
+    setIsCreatingNew(true)
+    try {
+      const name = extractNameFromSlug(slug)
+      const newSlug = await createBingoGame(name.trim())
+      router.push(`/${newSlug}`)
+    } catch (error) {
+      console.error('Error creating new bingo:', error)
+      setError('Failed to create new bingo game')
+    } finally {
+      setIsCreatingNew(false)
+    }
+  }
+
+  const createNewBingoGameForSlug = async () => {
+
+    // Automatically create a bingo game for this unused URL
+    try {
+      setIsCreatingNew(true)
+      const name = extractNameFromSlug(slug)
+      const newSlug = await createBingoGame(name)
+
+      console.log("slug", slug, "Current name", name, "new slug", newSlug)
+
+      // If the new slug is different, redirect to it
+      if (newSlug !== slug) {
+        router.replace(`/${newSlug}`)
+        return
+      }
+
+      // Otherwise, try fetching again
+      const newResponse = await fetch(`/api/bingo/${slug}`)
+      if (newResponse.ok) {
+        const data: BingoData = await newResponse.json()
+        setBingoData(data)
+        setCheckedItems(data.checked)
+        return
+      }
+    } catch (createError) {
+      console.error('Error auto-creating bingo game:', createError)
+      // Fall back to redirecting to homepage
+      router.push('/')
+      return
+    } finally {
+      setIsCreatingNew(false)
+    }
+  }
+
   const fetchBingoData = async () => {
+    if (!slug) return
+
     try {
       const response = await fetch(`/api/bingo/${slug}`)
 
       if (!response.ok) {
         if (response.status === 404) {
-          router.push('/')
+          createNewBingoGameForSlug()
           return
         }
         throw new Error('Failed to fetch bingo data')
@@ -98,17 +159,11 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
     }
   }
 
-  const checkBingoCompletion = () => {
-    if (!bingoData) return false
-    // Check if all 24 non-FREE cells are checked
-    return checkedItems.length >= 24
-  }
-
-  // Verwijder de automatische useEffect - modal wordt nu direct getoond bij completion
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div
+        className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center"
+        style={{ height: '95vh' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Bingo wordt ingeladen...</p>
@@ -116,10 +171,22 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
       </div>
     )
   }
+  if (isCreatingNew) {
+    return (
+      <div
+        className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center"
+        style={{ height: '95vh' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Bingo wordt aangemaakt...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (error || !bingoData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Bingo game not found'}</p>
           <button
@@ -138,10 +205,10 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
   gridItems.splice(12, 0, 'GRATIS') // Insert FREE at position 12 (center of 5x5 grid)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-6">
-        <div className="max-w-2xl mx-auto">
-          <header className="text-center mb-8">
+    <div className="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden min-h-screen">
+      <div className="flex-grow container mx-auto px-4 py-6 max-w-full">
+        <div className="max-w-2xl mx-auto w-full">
+          <header className="text-center mb-6 md:w-full md:min-h-0 min-h-[200px]" style={{ width: 'calc(100% - 200px)' }}>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Oerol Boomerbingo
             </h1>
@@ -154,38 +221,92 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
             <SocialShare />
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
-            <div className="grid grid-cols-5 gap-2 md:gap-3">
-              {gridItems.map((item, index) => {
-                const isFree = item === 'GRATIS'
-                const isChecked = isFree || checkedItems.includes(item)
+          {/* Mobile Overview Card - only show on mobile, make it sticky */}
+          <div className="md:hidden fixed top-0 bottom-0 right-0 z-20 pt-2 pb-4 px-4"
+            style={{ height: '240px', width: '200px' }}>
+            <BingoOverview gridItems={gridItems} checkedItems={checkedItems} />
+          </div>
 
-                return (
-                  <BingoCell
-                    key={index}
-                    item={item}
-                    isChecked={isChecked}
-                    isFree={isFree}
-                    onClick={() => !isFree && handleCellClick(item)}
-                    index={index}
-                  />
-                )
-              })}
+          {/* Desktop Grid - hidden on mobile */}
+          <div className="hidden md:block">
+            <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6 overflow-hidden">
+              <div className="grid grid-cols-5 gap-2 md:gap-3 w-full max-w-full">
+                {gridItems.map((item, index) => {
+                  const isFree = item === 'GRATIS'
+                  const isChecked = isFree || checkedItems.includes(item)
+
+                  return (
+                    <BingoCell
+                      key={index}
+                      item={item}
+                      isChecked={isChecked}
+                      isFree={isFree}
+                      onClick={() => !isFree && handleCellClick(item)}
+                      index={index}
+                    />
+                  )
+                })}
+              </div>
             </div>
+          </div>
+
+          {/* Mobile List View - only show on mobile */}
+          <div className="md:hidden grid grid-cols-1 gap-2">
+            {gridItems.map((item, index) => {
+              const isFree = item === 'GRATIS'
+              const isChecked = isFree || checkedItems.includes(item)
+
+              if (isFree) return null // Skip the GRATIS item in mobile list
+
+              return (
+                <button
+                  key={index}
+                  onClick={() => !isFree && handleCellClick(item)}
+                  disabled={isFree}
+                  className={`
+                    p-3 rounded-lg text-left transition-all duration-200 border-2 h-15 relative
+                    ${isChecked
+                      ? 'bg-green-50 border-green-300 text-green-800'
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+                  `}
+                >
+                  <div className="flex items-center h-full pr-8">
+                    <span className="font-medium text-xs leading-tight line-clamp-3 flex-1">{item}</span>
+                  </div>
+                  {isChecked && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">✓</span>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              )
+            })}
           </div>
 
           <div className='mt-6 text-center'>
             <p className="text-gray-600 text-sm">
-              <b>GRATIS</b>: Het middelste vakje is gratis. Boomers hebben altijd alles gratis gekregen.
+              Het middelste vakje krijg je <b>gratis</b> (net zoals boomers altijd alles gratis hebben gekregen).
             </p>
           </div>
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => router.push('/')}
-              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              onClick={handleStartNewBingo}
+              disabled={isCreatingNew}
+              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Start een nieuwe Bingo
+              {isCreatingNew ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Bingo wordt aangemaakt...
+                </div>
+              ) : (
+                <>Start een nieuwe Bingo</>
+              )}
             </button>
           </div>
         </div>
@@ -208,9 +329,6 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
         </div>
       )}
-
-      <footer className="text-center text-white text-sm mt-8" style={{ backgroundColor: '#945f14', clipPath: 'polygon(0 20%,100% 0,100% 100%,0% 100%)', marginTop: 'auto', padding: '1rem 0' }}>
-      </footer>
     </div>
   )
 } 
