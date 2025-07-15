@@ -2,6 +2,7 @@
 
 import BingoCell from '@/components/BingoCell'
 import BingoModal from '@/components/BingoModal'
+import SocialShare from '@/components/SocialShare'
 import { BingoData } from '@/lib/azure'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -148,6 +149,10 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
               Voortgang: {checkedItems.length}/24
             </p>
           </header>
+
+          <div className='mt-6 text-center'>
+            <SocialShare />
+          </div>
 
           <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
             <div className="grid grid-cols-5 gap-2 md:gap-3">

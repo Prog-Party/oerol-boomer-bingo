@@ -1,7 +1,8 @@
 import { formatCompletionTime } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import Confetti from 'react-confetti'
-import DonateDropdown from './Donate'
+import Donate from './Donate'
+import SocialShare from './SocialShare'
 
 interface BingoModalProps {
   isOpen: boolean
@@ -68,7 +69,12 @@ export default function BingoModal({ isOpen, onClose, createdAt, updatedAt }: Bi
           </div>
 
           <div className="mt-8 border-t border-gray-200">
-            <DonateDropdown />
+            <Donate />
+          </div>
+
+          <div className='mt-6 text-center'>
+            <h2>Deel op sociale media:</h2>
+            <SocialShare />
           </div>
 
           <button

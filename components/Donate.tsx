@@ -38,7 +38,7 @@ function ConvertGuilderToEuro(gulden: number): number {
   return gulden / 2.20371
 }
 
-export default function DonateDropdown() {
+export default function Donate() {
 
   const handleDonateClick = (option: DonateOption) => {
     if (option.payNlLink && option.euroAmount > 0) {
