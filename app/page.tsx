@@ -49,7 +49,7 @@ export default function HomePage() {
             <p className="text-gray-600">
               Turf je frustratie van je af met de
             </p>
-            
+
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               ✨ Oerol Boomerbingo ✨
             </h1>
@@ -57,7 +57,7 @@ export default function HomePage() {
               Volle kaart? Dan win je een ANWB-abonnement en een paar premium Nordicwalking-sokken.
             </p>
             <p className="text-gray-600 mt-2">
-                Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? -&gt; 
+              Vragen? Opmerkingen? Tips voor de kaart van volgend jaar? -&gt;
               <a
                 href="https://www.instagram.com/andriestunru"
                 target="_blank"
@@ -65,10 +65,19 @@ export default function HomePage() {
                 className="text-primary-600 hover:underline"
               >
                 &nbsp;@AndriesTunru&nbsp;
-              </a> op Instagram
+              </a>op Instagram
             </p>
             <p className='text-gray-600 mt-2 text-sm'>
-              (Voor de boomers: Instagram is een soort Polaroid maar dan met een app)
+              (Voor de boomers: Instagram is een soort{' '}
+              <a
+                href="https://nl.wikipedia.org/wiki/Polaroid_Corporation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 hover:underline"
+              >
+                Polaroid
+              </a>{' '}
+              maar dan met een app)
             </p>
           </div>
 
@@ -103,7 +112,7 @@ export default function HomePage() {
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Bingo wordt aangemaakt...
+                  Bingokaart wordt aangemaakt...
                 </div>
               ) : <>Start de Bingo</>}
             </button>

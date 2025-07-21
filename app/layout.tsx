@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen">
-        <main>{children}</main>
+        <main className='bg-gradient-to-br from-blue-50 to-indigo-100' style={{ paddingBottom: '6rem' }}>{children}</main>
         <Footer />
       </body >
     </html >
