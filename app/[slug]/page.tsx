@@ -206,18 +206,30 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
 
   return (
     <div className="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-100 overflow-x-hidden min-h-screen">
-      <div className="flex-grow container mx-auto px-4 py-6 max-w-full">
+      <div className="flex-grow container mx-auto px-4 max-w-full">
         <div className="max-w-2xl mx-auto w-full">
-          <header className="text-center mb-6 md:w-full md:min-h-0 min-h-[200px]" style={{ width: 'calc(100% - 200px)' }}>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Oerol Boomerbingo
-            </h1>
-            <p className="text-gray-600">
-              Voortgang: {checkedItems.length}/24
-            </p>
+          <header className="text-center mb-6 md:w-full md:min-h-0 " style={{ width: '100%' }}>
+            <div className='hidden md:block' style={{
+              clipPath: 'polygon(0% 0%,100% 0%,91.483% 82.497%,91.483% 82.497%,91.071% 85.61%,90.511% 88.49%,89.816% 91.109%,88.999% 93.443%,88.075% 95.464%,87.057% 97.148%,85.958% 98.467%,84.793% 99.396%,83.574% 99.909%,82.315% 99.979%,0% 89.624%,0% 0%)',
+              padding: '1rem 0',
+              backgroundColor: '#FFFFFF',
+              width: '100%',
+            }}>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                Oerol Boomerbingo
+              </h1>
+              <p className="hidden md:block text-gray-600">
+                Voortgang: {checkedItems.length}/24
+              </p>
+            </div>
+            <div className='w-[50%] pt-4'>
+              <h1 className="md:hidden block text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                Oerol Boomerbingo
+              </h1>
+            </div>
           </header>
 
-          <div className='mt-6 text-center'>
+          <div className='md:min-h-[0px] min-h-[140px]'>
             <SocialShare />
           </div>
 
@@ -310,7 +322,7 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
             </button>
           </div>
         </div>
-      </div>
+      </div >
 
       {showBingoModal && bingoData && (
         <BingoModal
@@ -322,13 +334,16 @@ export default function BingoBoardPage({ params }: BingoBoardPageProps) {
           createdAt={bingoData.createdAt}
           updatedAt={bingoCompletedAt || bingoData.updatedAt}
         />
-      )}
+      )
+      }
 
-      {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-40">
-          <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
-        </div>
-      )}
-    </div>
+      {
+        showConfetti && (
+          <div className="fixed inset-0 pointer-events-none z-40">
+            <div className="absolute inset-0 bg-yellow-400 bg-opacity-20 animate-pulse"></div>
+          </div>
+        )
+      }
+    </div >
   )
 } 
