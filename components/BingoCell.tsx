@@ -1,4 +1,3 @@
-
 interface BingoCellProps {
   item: string
   isChecked: boolean
