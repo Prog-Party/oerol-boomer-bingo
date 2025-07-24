@@ -26,15 +26,7 @@ export default function Footer() {
           >
             Andries Tunru
           </a>
-          . Volg mij op{' '}
-          <a
-            href="https://www.instagram.com/andriestunru"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white underline"
-          >
-            Instagram @AndriesTunru
-          </a>
+          .
         </p>
         Realisatie door ProgParty
       </div>
